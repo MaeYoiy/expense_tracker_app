@@ -32,11 +32,27 @@ class _ExpensesState extends State<Expenses> {
   ];
 
   void _openAddExpenseOverlay() {
-    // showModalBottomSheet(context: context, builder: (ctx) {}) -> showModalBottomSheet(context: context, builder: (ctx) => )
+    // showModalBottomSheet(context: context, builder: (ctx) {}) == showModalBottomSheet(context: context, builder: (ctx) => )
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) => NewExpense(
+        onAddExpense: _addExpense,
+      ),
     );
+  }
+
+  // เพิ่มค่าใช้จ่าย
+  void _addExpense(Expense expense) {
+    setState(() {});
+    _registeredExpenses.add(expense);
+  }
+
+  // ลบค่าใช้จ่าย
+  void _removeExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
   }
 
   @override
@@ -56,7 +72,8 @@ class _ExpensesState extends State<Expenses> {
           // Toolbar with the Ad button => Row()
           const Text('The chart'),
           Expanded(
-            child: ExpensesList(expenses: _registeredExpenses),
+            child: ExpensesList(
+                expenses: _registeredExpenses, onRemoveExpense: _removeExpense),
           ),
         ],
       ),
