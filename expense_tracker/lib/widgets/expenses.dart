@@ -1,3 +1,6 @@
+// import 'dart:math';
+
+import 'package:expense_tracker/widgets/chart/chart.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/widgets/new_expense.dart';
@@ -50,13 +53,48 @@ class _ExpensesState extends State<Expenses> {
 
   // ลบค่าใช้จ่าย
   void _removeExpense(Expense expense) {
+    // Index
+    final expenseIndex = _registeredExpenses.indexOf(expense);
     setState(() {
       _registeredExpenses.remove(expense);
     });
+
+    // ลบข้อมูลเก่าทันที โดยที่ไม่ต้องรอ snackbar 3 วิ
+    ScaffoldMessenger.of(context).clearSnackBars();
+
+    // ปุ่มเลิกทำ
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: const Text('Expense deleted.'),
+        action: SnackBarAction(
+          label: 'Undo',
+          //  กดปุ่ม Undo เพื่อนำรายการกลับมา
+          onPressed: () {
+            setState(
+              () {
+                _registeredExpenses.insert(expenseIndex, expense);
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget mainContent = const Center(
+      child: Text('No expense found!, start adding some'),
+    );
+
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registeredExpenses,
+        onRemoveExpense: _removeExpense,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter ExpenseTracker'),
@@ -70,11 +108,8 @@ class _ExpensesState extends State<Expenses> {
       body: Column(
         children: [
           // Toolbar with the Ad button => Row()
-          const Text('The chart'),
-          Expanded(
-            child: ExpensesList(
-                expenses: _registeredExpenses, onRemoveExpense: _removeExpense),
-          ),
+          Chart(expenses: _registeredExpenses),
+          Expanded(child: mainContent),
         ],
       ),
     );
