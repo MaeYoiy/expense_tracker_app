@@ -37,6 +37,8 @@ class _ExpensesState extends State<Expenses> {
   void _openAddExpenseOverlay() {
     // showModalBottomSheet(context: context, builder: (ctx) {}) == showModalBottomSheet(context: context, builder: (ctx) => )
     showModalBottomSheet(
+      // เพื่อให้ Modal นี้ไม่ชนกับกล้องด้านบนของหน้าจอ
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) => NewExpense(
@@ -111,6 +113,7 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
+      // ถ้าความกว้าง < 600 คือแนวตั้ง แต่ถ้าไม่จริงคือแนวนอน
       body: width < 600
           ? Column(
               children: [
