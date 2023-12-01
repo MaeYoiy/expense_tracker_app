@@ -1,5 +1,6 @@
 import 'package:expense_tracker/widgets/expenses.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 var kColorSchema = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(255, 130, 85, 234),
@@ -12,6 +13,11 @@ var kDarkColorSchema = ColorScheme.fromSeed(
 );
 
 void main() {
+  // เพื่อให้แน่ใจว่าการล็อคการวางแนว DeviceOrientation.portraitUp และการเรียกใช้แอพจะทำงานตามที่ต้องการ
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  // ]).then((fn) {
   runApp(
     MaterialApp(
       darkTheme: ThemeData.dark().copyWith(
